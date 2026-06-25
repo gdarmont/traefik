@@ -103,3 +103,9 @@ func (r *ResponseModifier) Flush() {
 		flusher.Flush()
 	}
 }
+
+// Unwrap exposes the underlying ResponseWriter so that http.ResponseController
+// can reach methods such as SetWriteDeadline through the wrapper chain.
+func (r *ResponseModifier) Unwrap() http.ResponseWriter {
+	return r.rw
+}

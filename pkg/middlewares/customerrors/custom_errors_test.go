@@ -14,6 +14,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/traefik/traefik/v3/pkg/config/dynamic"
 	"github.com/traefik/traefik/v3/pkg/testhelpers"
+	"github.com/traefik/traefik/v3/pkg/types"
 )
 
 func TestHandler(t *testing.T) {
@@ -498,4 +499,22 @@ func TestHandlerURLPlaceholder(t *testing.T) {
 			assert.Equal(t, test.expected, gotRequestURI)
 		})
 	}
+}
+
+// The WriteTimeout middleware relies on Unwrap to reach SetWriteDeadline
+// through the wrapper chain.
+func TestCodeCatcher_Unwrap(t *testing.T) {
+	rw := httptest.NewRecorder()
+
+	catcher := newCodeCatcher(rw, types.HTTPCodeRanges{{500, 599}})
+
+	assert.Same(t, rw, catcher.Unwrap())
+}
+
+func TestCodeModifier_Unwrap(t *testing.T) {
+	rw := httptest.NewRecorder()
+
+	modifier := newCodeModifier(rw, http.StatusTeapot)
+
+	assert.Same(t, rw, modifier.Unwrap())
 }

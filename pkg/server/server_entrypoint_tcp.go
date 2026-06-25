@@ -28,6 +28,7 @@ import (
 	"github.com/traefik/traefik/v3/pkg/middlewares/contenttype"
 	"github.com/traefik/traefik/v3/pkg/middlewares/forwardedheaders"
 	"github.com/traefik/traefik/v3/pkg/middlewares/requestdecorator"
+	"github.com/traefik/traefik/v3/pkg/middlewares/writetimeout"
 	"github.com/traefik/traefik/v3/pkg/observability/logs"
 	"github.com/traefik/traefik/v3/pkg/observability/metrics"
 	"github.com/traefik/traefik/v3/pkg/proxy/fast"
@@ -653,7 +654,7 @@ func newHTTPServer(ctx context.Context, ln net.Listener, configuration *static.E
 
 	httpSwitcher := middlewares.NewHandlerSwitcher(http.NotFoundHandler())
 
-	next, err := alice.New(requestdecorator.WrapHandler(reqDecorator)).Then(httpSwitcher)
+	next, err := alice.New(requestdecorator.WrapHandler(reqDecorator), writetimeout.WrapEntryPointHandler).Then(httpSwitcher)
 	if err != nil {
 		return nil, err
 	}

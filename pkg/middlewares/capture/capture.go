@@ -188,6 +188,12 @@ func (crw *captureResponseWriter) Flush() {
 	}
 }
 
+// Unwrap exposes the underlying ResponseWriter so that http.ResponseController
+// can reach methods such as SetWriteDeadline through the wrapper chain.
+func (crw *captureResponseWriter) Unwrap() http.ResponseWriter {
+	return crw.rw
+}
+
 func (crw *captureResponseWriter) Hijack() (net.Conn, *bufio.ReadWriter, error) {
 	if h, ok := crw.rw.(http.Hijacker); ok {
 		return h.Hijack()

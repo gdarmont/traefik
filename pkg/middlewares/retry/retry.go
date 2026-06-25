@@ -387,6 +387,12 @@ func (r *responseWriter) Flush() {
 	}
 }
 
+// Unwrap exposes the underlying ResponseWriter so that http.ResponseController
+// can reach methods such as SetWriteDeadline through the wrapper chain.
+func (r *responseWriter) Unwrap() http.ResponseWriter {
+	return r.responseWriter
+}
+
 type peekedBody struct {
 	io.ReadCloser
 

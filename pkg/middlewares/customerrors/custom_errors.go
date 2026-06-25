@@ -293,6 +293,12 @@ func (cc *codeCatcher) WriteHeader(code int) {
 	cc.headersSent = true
 }
 
+// Unwrap exposes the underlying ResponseWriter so that http.ResponseController
+// can reach methods such as SetWriteDeadline through the wrapper chain.
+func (cc *codeCatcher) Unwrap() http.ResponseWriter {
+	return cc.responseWriter
+}
+
 // Hijack hijacks the connection.
 func (cc *codeCatcher) Hijack() (net.Conn, *bufio.ReadWriter, error) {
 	if hj, ok := cc.responseWriter.(http.Hijacker); ok {
@@ -396,6 +402,12 @@ func (r *codeModifier) WriteHeader(code int) {
 
 	r.responseWriter.WriteHeader(r.code)
 	r.headerSent = true
+}
+
+// Unwrap exposes the underlying ResponseWriter so that http.ResponseController
+// can reach methods such as SetWriteDeadline through the wrapper chain.
+func (r *codeModifier) Unwrap() http.ResponseWriter {
+	return r.responseWriter
 }
 
 // Hijack hijacks the connection.
