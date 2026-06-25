@@ -51,6 +51,7 @@ Middlewares that use the same protocol can be combined into chains to fit every 
 | <a id="opt-Retry" href="#opt-Retry" title="#opt-Retry">[Retry](retry.md)</a> | Automatically retries in case of error            | Request lifecycle           |
 | <a id="opt-StripPrefix" href="#opt-StripPrefix" title="#opt-StripPrefix">[StripPrefix](stripprefix.md)</a> | Changes the path of the request                   | Path Modifier               |
 | <a id="opt-StripPrefixRegex" href="#opt-StripPrefixRegex" title="#opt-StripPrefixRegex">[StripPrefixRegex](stripprefixregex.md)</a> | Changes the path of the request                   | Path Modifier               |
+| <a id="opt-WriteTimeout" href="#opt-WriteTimeout" title="#opt-WriteTimeout">[WriteTimeout](writetimeout.md)</a> | Overrides the response write deadline for matching requests | Request Lifecycle           |
 
 ## Community Middlewares
 
