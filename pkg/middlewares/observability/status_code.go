@@ -39,3 +39,9 @@ func (s *statusCodeRecorder) Flush() {
 		flusher.Flush()
 	}
 }
+
+// Unwrap exposes the underlying ResponseWriter so that http.ResponseController
+// can reach methods such as SetWriteDeadline through the wrapper chain.
+func (s *statusCodeRecorder) Unwrap() http.ResponseWriter {
+	return s.ResponseWriter
+}

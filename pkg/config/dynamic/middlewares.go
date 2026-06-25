@@ -47,6 +47,7 @@ type Middleware struct {
 	Retry             *Retry             `json:"retry,omitempty" toml:"retry,omitempty" yaml:"retry,omitempty" export:"true"`
 	ContentType       *ContentType       `json:"contentType,omitempty" toml:"contentType,omitempty" yaml:"contentType,omitempty" label:"allowEmpty" file:"allowEmpty" kv:"allowEmpty" export:"true"`
 	GrpcWeb           *GrpcWeb           `json:"grpcWeb,omitempty" toml:"grpcWeb,omitempty" yaml:"grpcWeb,omitempty" export:"true"`
+	WriteTimeout      *WriteTimeout      `json:"writeTimeout,omitempty" toml:"writeTimeout,omitempty" yaml:"writeTimeout,omitempty" export:"true"`
 
 	Plugin map[string]PluginConf `json:"plugin,omitempty" toml:"plugin,omitempty" yaml:"plugin,omitempty" export:"true"`
 
@@ -72,6 +73,18 @@ type GrpcWeb struct {
 	// AllowOrigins is a list of allowable origins.
 	// Can also be a wildcard origin "*".
 	AllowOrigins []string `json:"allowOrigins,omitempty" toml:"allowOrigins,omitempty" yaml:"allowOrigins,omitempty"`
+}
+
+// +k8s:deepcopy-gen=true
+
+// WriteTimeout holds the write timeout middleware configuration.
+// This middleware overrides the EntryPoint response write deadline for the matching requests,
+// so that long-lived streaming responses such as Server-Sent Events are not interrupted.
+type WriteTimeout struct {
+	// Timeout defines the maximum duration for writing the response to the client.
+	// A zero value disables the write deadline for the matching requests.
+	// Negative values are rejected.
+	Timeout ptypes.Duration `json:"timeout,omitempty" toml:"timeout,omitempty" yaml:"timeout,omitempty" export:"true"`
 }
 
 // +k8s:deepcopy-gen=true
