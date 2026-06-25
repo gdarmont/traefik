@@ -1413,6 +1413,25 @@ spec:
                       type: string
                     type: array
                 type: object
+              writeTimeout:
+                description: |-
+                  WriteTimeout holds the write timeout middleware configuration.
+                  This middleware overrides the EntryPoint response write deadline for the matching requests,
+                  so that long-lived streaming responses such as Server-Sent Events are not interrupted.
+                properties:
+                  timeout:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    description: |-
+                      Timeout defines the maximum duration for writing the response to the client.
+                      The value of timeout should be provided in seconds or as a valid duration format,
+                      see https://pkg.go.dev/time#ParseDuration.
+                      A zero value disables the write deadline for the matching requests.
+                      Negative values are rejected.
+                    pattern: ^([0-9]+(ns|us|µs|ms|s|m|h)?)+$
+                    x-kubernetes-int-or-string: true
+                type: object
             type: object
         required:
         - metadata

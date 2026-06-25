@@ -52,6 +52,7 @@ type MiddlewareSpec struct {
 	Retry             *Retry                     `json:"retry,omitempty"`
 	ContentType       *dynamic.ContentType       `json:"contentType,omitempty"`
 	GrpcWeb           *dynamic.GrpcWeb           `json:"grpcWeb,omitempty"`
+	WriteTimeout      *WriteTimeout              `json:"writeTimeout,omitempty"`
 	// Plugin defines the middleware plugin configuration.
 	// More info: https://doc.traefik.io/traefik/v3.7/reference/routing-configuration/http/middlewares/overview/#community-middlewares
 	Plugin map[string]apiextensionv1.JSON `json:"plugin,omitempty"`
@@ -375,6 +376,22 @@ type Retry struct {
 	DisableRetryOnNetworkError bool `json:"disableRetryOnNetworkError,omitempty"`
 	// RetryNonIdempotentMethod activates the retry for non-idempotent methods (POST, LOCK, PATCH)
 	RetryNonIdempotentMethod bool `json:"retryNonIdempotentMethod,omitempty"`
+}
+
+// +k8s:deepcopy-gen=true
+
+// WriteTimeout holds the write timeout middleware configuration.
+// This middleware overrides the EntryPoint response write deadline for the matching requests,
+// so that long-lived streaming responses such as Server-Sent Events are not interrupted.
+type WriteTimeout struct {
+	// Timeout defines the maximum duration for writing the response to the client.
+	// The value of timeout should be provided in seconds or as a valid duration format,
+	// see https://pkg.go.dev/time#ParseDuration.
+	// A zero value disables the write deadline for the matching requests.
+	// Negative values are rejected.
+	// +kubebuilder:validation:Pattern="^([0-9]+(ns|us|µs|ms|s|m|h)?)+$"
+	// +kubebuilder:validation:XIntOrString
+	Timeout intstr.IntOrString `json:"timeout,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

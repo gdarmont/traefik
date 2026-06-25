@@ -334,6 +334,12 @@ func (p *Provider) loadConfigurationFromCRD(ctx context.Context, client Client) 
 			continue
 		}
 
+		writeTimeout, err := createWriteTimeoutMiddleware(middleware.Spec.WriteTimeout)
+		if err != nil {
+			logger.Error().Err(err).Msg("Error while reading writeTimeout middleware")
+			continue
+		}
+
 		addToConfig(log.Ctx(ctxMid), "middleware", id, conf.HTTP.Middlewares, &dynamic.Middleware{
 			AddPrefix:         middleware.Spec.AddPrefix,
 			StripPrefix:       middleware.Spec.StripPrefix,
@@ -360,6 +366,7 @@ func (p *Provider) loadConfigurationFromCRD(ctx context.Context, client Client) 
 			Retry:             retry,
 			ContentType:       middleware.Spec.ContentType,
 			GrpcWeb:           middleware.Spec.GrpcWeb,
+			WriteTimeout:      writeTimeout,
 			Plugin:            plugin,
 		})
 	}
@@ -1075,6 +1082,20 @@ func createRetryMiddleware(retry *traefikv1alpha1.Retry) (*dynamic.Retry, error)
 	}
 
 	return r, nil
+}
+
+func createWriteTimeoutMiddleware(writeTimeout *traefikv1alpha1.WriteTimeout) (*dynamic.WriteTimeout, error) {
+	if writeTimeout == nil {
+		return nil, nil
+	}
+
+	wt := &dynamic.WriteTimeout{}
+
+	if err := wt.Timeout.Set(writeTimeout.Timeout.String()); err != nil {
+		return nil, err
+	}
+
+	return wt, nil
 }
 
 func createForwardAuthMiddleware(k8sClient Client, namespace string, auth *traefikv1alpha1.ForwardAuth) (*dynamic.ForwardAuth, error) {

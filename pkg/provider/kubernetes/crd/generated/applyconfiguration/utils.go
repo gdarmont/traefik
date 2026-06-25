@@ -164,6 +164,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &traefikiov1alpha1.TraefikServiceSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("WeightedRoundRobin"):
 		return &traefikiov1alpha1.WeightedRoundRobinApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("WriteTimeout"):
+		return &traefikiov1alpha1.WriteTimeoutApplyConfiguration{}
 
 	}
 	return nil
