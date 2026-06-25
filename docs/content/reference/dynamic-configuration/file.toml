@@ -375,6 +375,9 @@
     [http.middlewares.Middleware25]
       [http.middlewares.Middleware25.stripPrefixRegex]
         regex = ["foobar", "foobar"]
+    [http.middlewares.Middleware26]
+      [http.middlewares.Middleware26.writeTimeout]
+        timeout = "42s"
   [http.serversTransports]
     [http.serversTransports.ServersTransport0]
       serverName = "foobar"

@@ -429,6 +429,9 @@ http:
         regex:
           - foobar
           - foobar
+    Middleware26:
+      writeTimeout:
+        timeout: 42s
   serversTransports:
     ServersTransport0:
       serverName: foobar
